@@ -5,7 +5,7 @@ services:
     name: recruitkr-api
     runtime: node
     plan: free
-    rootDir: backend
+    rootDir: . # backend files live at the repo root, not in a backend/ subfolder
     buildCommand: npm install
     startCommand: npm start
     envVars:
