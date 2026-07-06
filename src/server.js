@@ -64,3 +64,5 @@ connectDB()
       console.log(`🚀 RecruitKR API running on port ${PORT}`);
     });
   });
+
+// redeploy trigger: chat routes (messages + ai/chat) — deploy-bab2b0b
