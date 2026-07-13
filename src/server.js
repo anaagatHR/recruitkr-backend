@@ -1,4 +1,6 @@
 import "dotenv/config";
+import http from 'http';
+import socketIo from 'socket.io';
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
@@ -13,6 +15,26 @@ import aiRoutes from "./routes/aiRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
 
 const app = express();
+const server = http.createServer(app);
+
+// Initialize Socket.io with CORS
+const io = socketIo(server, {
+    cors: {
+          origin: ["https://recruitkr-business-os.vercel.app", "http://localhost:3000", "http://localhost:3001"],
+          methods: ["GET", "POST"],
+          credentials: true
+    },
+    transports: ['websocket', 'polling']
+});
+
+// Socket.io connection handler
+io.on('connection', (socket) => {
+    console.log('✅ Client connected:', socket.id);
+
+    socket.on('disconnect', () => {
+          console.log('❌ Client disconnected:', socket.id);
+    });
+});
 
 // Behind Render's proxy — needed for correct client IPs (rate limiting).
 app.set("trust proxy", 1);
@@ -60,8 +82,7 @@ const PORT = process.env.PORT || 5000;
 connectDB()
   .then(autoSeedIfEmpty)
   .then(() => {
-    app.listen(PORT, () => {
-      console.log(`🚀 RecruitKR API running on port ${PORT}`);
+server      console.log(`🚀 RecruitKR API running on port ${PORT}`);
     });
   });
 
